@@ -1,8 +1,5 @@
-require 'rubygems'
 require 'bundler/setup'
-require 'sinatra/base'
-
-class WebApplicationSettings < Sinatra::Base
+require 'sinatra'
 
 	configure do
 	  set :views, "#{File.dirname(__FILE__)}/views"
@@ -13,13 +10,8 @@ class WebApplicationSettings < Sinatra::Base
 	  @author = "Web application author"
 	end
 
-end
-
-class WebApplicationCoreRoutes < WebApplicationSettings
-
 	# root page
 	get '/' do
-	  "Hello world!"
+	  erb :home
 	end
 
-end
