@@ -25,6 +25,7 @@ password: APP_CONFIG['db_password'])
 
 	# root page
 	get '/' do
+	  @posts = Post.find_by_sql("SELECT title, CONCAT(SUBSTRING(body,1, 10), '...') AS partial_body FROM posts")
 	  erb :home
 	end
 

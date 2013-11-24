@@ -11,10 +11,12 @@
 <h1>Welcome to my blog!</h1>
 <ul>
 
+<% @posts.each do |post| %>
   <li>
-    <h3><a href="#">Example</a></h3>
-    <p></p>
+    <h3><a href="/posts/<%= post.id %>"><%= post.title %></a></h3>
+    <p><%= post.partial_body %></p>
   </li>
+<% end %>
 
 </ul> 
 
