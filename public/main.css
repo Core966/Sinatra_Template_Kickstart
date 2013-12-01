@@ -1,0 +1,29 @@
+* {padding:0; margin:0;}
+
+body {
+  background: #FFF;
+  color: #1B1B1B;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  background-image: url('images/background.jpg')
+}
+
+#wrapper { width: 1024px; margin: 0 auto; background-color:white;}
+
+container {
+  margin: 0 auto;
+  width: 1024px;
+}
+#header {
+  margin: 0;
+  text-align: center;
+}
+
+#footer {
+  width:1024px;
+  padding: 0;
+  margin: 0;
+  font-size: 0.7em;
+  text-align: center;
+  border-top: 3px solid #000;
+}
+

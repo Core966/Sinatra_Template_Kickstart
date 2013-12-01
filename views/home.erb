@@ -1,26 +1,12 @@
-<!DOCTYPE html>
-
-<html>
-
-<head>
-<title><%= @title %></title>
-</head>
-<body>
-
-
-<h1>Welcome to my blog!</h1>
+<h1>Welcome to your startout app!</h1>
+<br />
 <ul>
-
+<h2>Blog posts:</h2>
 <% @posts.each do |post| %>
   <li>
     <h3><a href="/posts/<%= post.id %>"><%= post.title %></a></h3>
     <p><%= post.partial_body %></p>
   </li>
 <% end %>
-
 </ul> 
 
-
-</body>
-
-</html>

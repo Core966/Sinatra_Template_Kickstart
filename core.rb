@@ -3,7 +3,7 @@ require 'sinatra'
 require 'active_record'
 require 'yaml'
 
-require_relative 'models/post'
+require File.join(File.dirname(__FILE__), 'models/post.rb')
 
 APP_CONFIG = YAML.load_file('./config/database.yml')
 
@@ -25,7 +25,10 @@ password: APP_CONFIG['db_password'])
 
 	# root page
 	get '/' do
-	  @posts = Post.find_by_sql("SELECT title, CONCAT(SUBSTRING(body,1, 10), '...') AS partial_body FROM posts")
+	  @posts = Post.find_by_sql("SELECT title, CONCAT(SUBSTRING(body,1, 50), '...') AS partial_body FROM posts")
 	  erb :home
 	end
+
+#Enable the below in order to activate the CRUD operations of posts:
+#require File.join(File.dirname(__FILE__), 'posts_controller.rb')
 
