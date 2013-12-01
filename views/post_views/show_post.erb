@@ -1,0 +1,11 @@
+<h1><%= @post.title %></h1>
+<p><%= @post.body %></p>
+
+<form action="/posts/<%= "#{@post.id}" %>" method="post">
+  <input type="hidden" name="_method" value="delete" />
+  <input type="submit" class="pure-button" value="Delete Post" />
+</form>
+
+<a class="pure-button" href="/posts/<%= "#{@post.id}" %>/edit">Edit post</a>
+
+<a class="pure-button" href="/posts">Back</a>

@@ -23,12 +23,21 @@ password: APP_CONFIG['db_password'])
 	  @author = "Web application author"
 	end
 
+	def current?(path='/') #This will return the path of the page that’s currently being visited, relative to the root URL
+	  (request.path==path || request.path==path+'/') ? "pure-menu-selected" : nil
+	end
+
 	# root page
 	get '/' do
 	  @posts = Post.find_by_sql("SELECT title, CONCAT(SUBSTRING(body,1, 50), '...') AS partial_body FROM posts")
 	  erb :home
 	end
 
+	get '/about/?' do
+	  erb :about
+	end
+
 #Enable the below in order to activate the CRUD operations of posts:
-#require File.join(File.dirname(__FILE__), 'posts_controller.rb')
+require File.join(File.dirname(__FILE__), './posts_controller.rb')
+#Or you may delete the post_views folder and all its files within. You must also edit the menu.erb partial.
 
