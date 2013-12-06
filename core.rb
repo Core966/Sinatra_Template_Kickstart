@@ -5,6 +5,8 @@ require 'yaml'
 
 require File.join(File.dirname(__FILE__), 'models/post.rb')
 
+require File.join(File.dirname(__FILE__), 'models/comment.rb')
+
 APP_CONFIG = YAML.load_file('./config/database.yml')
 
 ActiveRecord::Base.establish_connection(
@@ -29,7 +31,7 @@ password: APP_CONFIG['db_password'])
 
 	# root page
 	get '/' do
-	  @posts = Post.find_by_sql("SELECT title, CONCAT(SUBSTRING(body,1, 50), '...') AS partial_body FROM posts")
+	  @posts = Post.find_by_sql("SELECT id, title, CONCAT(SUBSTRING(body,1, 50), '...') AS partial_body FROM posts")
 	  erb :home
 	end
 
