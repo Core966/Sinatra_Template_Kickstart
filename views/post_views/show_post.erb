@@ -1,9 +1,11 @@
 <h1><%= @post[0].title %></h1>
 <p><%= @post[0].body %></p>
 <h4>Comments</h4>
+<div id="comments">
 <% @post.each do |comments| %>
-<div id ="comment"><%= comments.comment %></div>
+<div class="comment"><%= comments.comment %></div>
 <% end %>
+</div>
 
 
 <h4>Add new comment</h4>
