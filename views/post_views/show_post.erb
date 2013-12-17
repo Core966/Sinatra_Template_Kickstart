@@ -14,7 +14,7 @@
   <textarea id="comment" name="comment[comment]" rows="3"></textarea>
   <input type="hidden" name="comment[post_id]" value="<%= @post[0].id %>" />
   <br />
-  <input type="submit" class="pure-button" value="Create Comment" />
+  <input type="submit" class="pure-button" id="load_post" value="Create Comment" />
 </form>
 
 <form action="/posts/<%= "#{@post[0].id}" %>" method="post">
