@@ -11,7 +11,6 @@
     end
     
     get '/posts/:id' do
-      #@post = Post.find_by_sql("SELECT posts.title AS post_title, posts.body AS post_body, comments.comment AS post_comment FROM posts LEFT OUTER JOIN comments ON posts.id = comments.post_id WHERE posts.id = " + params[:id])
       @post = Post.find_by_sql("SELECT posts.*, comments.comment, comments.post_id FROM posts, comments WHERE posts.id = comments.post_id")
       @comment = Comment.new
       @title = @title + " | " + @post[0].title

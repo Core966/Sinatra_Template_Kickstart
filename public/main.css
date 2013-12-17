@@ -30,9 +30,8 @@ container {
 
 .pure-button { margin-top:1em; margin-bottom:1em; }
 
-legend { border: 1px solid rgb(229, 229, 229);
+#comment { border: 1px solid rgb(229, 229, 229);
 display: block;
-
 padding: 0.3em 0px;
 margin-bottom: 10px;
 }

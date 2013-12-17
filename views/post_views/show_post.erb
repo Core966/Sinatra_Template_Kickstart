@@ -1,8 +1,8 @@
 <h1><%= @post[0].title %></h1>
 <p><%= @post[0].body %></p>
 <h4>Comments</h4>
-<% @post.each do |comment| %>
-<legend><%= comment.comment %></legend>
+<% @post.each do |comments| %>
+<div id ="comment"><%= comments.comment %></div>
 <% end %>
 
 
