@@ -2,8 +2,11 @@
 <p><%= @post[0].body %></p>
 <h4>Comments</h4>
 <div id="comments">
+<% i=1 %>
 <% @post.each do |comments| %>
-<div class="comment"><%= comments.comment %></div>
+<div id="comment-id-<%= "#{i}" %>" class="edit-<%= "#{i}" %>"><%= comments.comment %></div>
+<a class="pure-button comment-button edit-<%= "#{i}" %>">Start editing comment</a>
+<% i = i + 1 %>
 <% end %>
 </div>
 

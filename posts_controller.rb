@@ -11,8 +11,9 @@
     end
     
     get '/posts/:id' do
-      @post = Post.find_by_sql("SELECT posts.*, comments.comment, comments.post_id FROM posts, comments WHERE posts.id = comments.post_id")
+      @post = Post.find_by_sql("SELECT posts.*, comments.* FROM posts, comments WHERE posts.id = comments.post_id")
       @comment = Comment.new
+      @edit_comment = Comment.find(params[:id])
       @title = @title + " | " + @post[0].title
       erb "post_views/show_post".to_sym
     end
@@ -32,6 +33,15 @@
 	  redirect "/posts/#{@comment.post_id}"
 	else
 	  erb "post_views/show_post".to_sym
+	end
+    end
+
+    put '/comments/:id' do
+      comment = Comment.find(params[:id])
+	if comment.update_attributes(params[:comment])
+	  redirect "/posts/#{params[:id]}"
+	else
+	  redirect to("/posts/")
 	end
     end
     
