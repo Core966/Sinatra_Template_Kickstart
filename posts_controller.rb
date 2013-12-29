@@ -11,9 +11,13 @@
     end
     
     get '/posts/:id' do
-      @post = Post.find_by_sql("SELECT posts.*, comments.* FROM posts, comments WHERE posts.id = comments.post_id")
+      @post = Post.find_by_sql("SELECT posts.*, comments.* FROM posts, comments WHERE comments.post_id = posts.id AND posts.id = " + params[:id])
+      if (nil == @post[0])
+	@post = Post.find_by_sql("SELECT * FROM posts WHERE posts.id = " + params[:id])
+        @no_comment = true
+      end
       @comment = Comment.new
-      @edit_comment = Comment.find(params[:id])
+      #@edit_comment = Comment.find(params[:id])
       @title = @title + " | " + @post[0].title
       erb "post_views/show_post".to_sym
     end

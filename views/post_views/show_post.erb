@@ -1,5 +1,6 @@
 <h1><%= @post[0].title %></h1>
 <p><%= @post[0].body %></p>
+<% unless @no_comment %>
 <h4>Comments</h4>
 <div id="comments">
 <% i=1 %>
@@ -9,22 +10,23 @@
 <% i = i + 1 %>
 <% end %>
 </div>
+<% end %>
 
 
 <h4>Add new comment</h4>
 <form action="/comments" class="pure-form pure-form-stacked" method="post">
   <label for="comment">Comment:</label><br />
   <textarea id="comment" name="comment[comment]" rows="3"></textarea>
-  <input type="hidden" name="comment[post_id]" value="<%= @post[0].id %>" />
+  <input type="hidden" name="comment[post_id]" value="<%= "#{params[:id]}" %>" />
   <br />
   <input type="submit" class="pure-button" id="load_post" value="Create Comment" />
 </form>
 
-<form action="/posts/<%= "#{@post[0].id}" %>" method="post">
+<form action="/posts/<%= "#{params[:id]}" %>" method="post">
   <input type="hidden" name="_method" value="delete" />
   <input type="submit" class="pure-button" value="Delete Post" />
 </form>
 
-<a class="pure-button" href="/posts/<%= "#{@post[0].id}" %>/edit">Edit post</a>
+<a class="pure-button" href="/posts/<%= "#{params[:id]}" %>/edit">Edit post</a>
 
 <a class="pure-button" href="/posts">Back</a>
