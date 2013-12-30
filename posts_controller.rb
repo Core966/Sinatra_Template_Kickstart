@@ -31,12 +31,13 @@
 	end
     end
 
-    post '/comments/?' do
+    get '/comments' do
       @comment = Comment.new(params[:comment])
 	if @comment.save
-	  redirect "/posts/#{@comment.post_id}"
+          @post = Post.find_by_sql("SELECT comments.* FROM comments WHERE comments.post_id = " + params[:comment][:post_id])
+	  erb "post_views/comments".to_sym, :layout => false
 	else
-	  erb "post_views/show_post".to_sym
+	  "There is problem with the save of the comment!"
 	end
     end
 

@@ -14,12 +14,12 @@
 
 
 <h4>Add new comment</h4>
-<form action="/comments" class="pure-form pure-form-stacked" method="post">
+<form action="/posts/<%= "#{params[:id]}" %>" id="load_post" class="pure-form pure-form-stacked" method="post">
   <label for="comment">Comment:</label><br />
   <textarea id="comment" name="comment[comment]" rows="3"></textarea>
   <input type="hidden" name="comment[post_id]" value="<%= "#{params[:id]}" %>" />
   <br />
-  <input type="submit" class="pure-button" id="load_post" value="Create Comment" />
+  <input type="submit" class="pure-button" value="Create Comment" />
 </form>
 
 <form action="/posts/<%= "#{params[:id]}" %>" method="post">
