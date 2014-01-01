@@ -41,12 +41,13 @@
 	end
     end
 
-    put '/comments/:id' do
+    get '/comments/:id' do
       comment = Comment.find(params[:id])
 	if comment.update_attributes(params[:comment])
-	  redirect "/posts/#{params[:id]}"
+          @post = Post.find_by_sql("SELECT comments.* FROM comments WHERE comments.post_id = " + params[:comment][:post_id])
+	  erb "post_views/comments".to_sym, :layout => false
 	else
-	  redirect to("/posts/")
+	  "There is problem with the save of the comment!"
 	end
     end
     

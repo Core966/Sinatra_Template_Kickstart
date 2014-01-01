@@ -3,11 +3,14 @@
 <% unless @no_comment %>
 <h4>Comments</h4>
 <div id="comments">
-<% i=1 %>
 <% @post.each do |comments| %>
-<div id="comment-id-<%= "#{i}" %>" class="edit-<%= "#{i}" %>"><%= comments.comment %></div>
-<a class="pure-button comment-button edit-<%= "#{i}" %>">Start editing comment</a>
-<% i = i + 1 %>
+<form action="/posts/<%= "#{params[:id]}" %>" id="edit_post" class="pure-form pure-form-stacked edit-<%= "#{comments.id}" %>" method="post">
+<label for="comment">Edit comment:</label><br />
+<div id="comment-id-<%= "#{comments.id}" %>" class="edit-<%= "#{comments.id}" %>"><%= comments.comment %></div>
+<input type="hidden" name="comment[post_id]" value="<%= "#{params[:id]}" %>" />
+<br />
+<div id="comment-button-id-<%= "#{comments.id}" %>"><a class="pure-button comment-button edit-<%= "#{comments.id}" %>">Start editing comment</a></div>
+</form>
 <% end %>
 </div>
 <% end %>
