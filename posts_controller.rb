@@ -61,13 +61,14 @@
       if (nil == @comment[0]) #If its there is is probably an error, but if not...
         #We need to get all of the posts with the post_id got from the deleted comment.
 	#@post_id = @post_id[0].post_id
-	#@post_id = @post_id.to_i <--Conversion problem probably...
+	#@post_id = @post_id.to_i
 	#@post = Post.find_by_sql("SELECT comments.* FROM comments WHERE comments.post_id = " + @post_id) <--This still not works.
 	#If the query would still not wield results, then we probably deleted all of the comments.
-	if (nil == @post[0])
+	if (nil == @comment)
 	@no_comment = true #And we need to tell that to the check in the erb template
-	end
+	
         erb "post_views/comments".to_sym, :layout => false
+	end
       else
         "There is problem with the deletion of the comment!"
       end
