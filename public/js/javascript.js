@@ -5,7 +5,7 @@ $(document).ready(function() {
 
     var ajax_load = "<img src='/images/Loading-special.gif' alt='loading...' />";
 
-    $("#load_post").submit(function(ev){
+    $("#load_comment").submit(function(ev){
 	ev.preventDefault();
 	$.ajax({
             url: "/comments",
@@ -27,7 +27,7 @@ $(document).ready(function() {
       $("div#comment-button-id-" + comment_db_id).html('<input type="submit" class="pure-button" value="Submit Edited Comment" />');
     });
 
-    $("#edit_post").submit(function(ev){
+    $("#edit_comment").submit(function(ev){
 	ev.preventDefault();
         var classes = $(this).attr("class").split(" ");
         var comment_class_id = classes[classes.length-1];
@@ -35,6 +35,22 @@ $(document).ready(function() {
         var comment_db_id = comment_id[comment_id.length-1];
 	$.ajax({
             url: "/comments/" + comment_db_id,
+            data: $(this).serialize(),
+            dataType: "html",
+            success: function(data) {
+              $('div#comments').html(data);
+            }
+        });
+    });
+
+    $("#delete_comment").submit(function(ev){
+	ev.preventDefault();
+        var classes = $(this).attr("class").split(" ");
+        var comment_class_id = classes[classes.length-1];
+        var comment_id = comment_class_id.split("-");
+        var comment_db_id = comment_id[comment_id.length-1];
+	$.ajax({
+            url: "/comments/" + comment_db_id + "/delete",
             data: $(this).serialize(),
             dataType: "html",
             success: function(data) {
