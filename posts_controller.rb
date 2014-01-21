@@ -11,13 +11,12 @@
     end
     
     get '/posts/:id' do
-      @post = Post.find_by_sql("SELECT posts.*, comments.* FROM posts, comments WHERE comments.post_id = posts.id AND posts.id = " + params[:id])
-      if (nil == @post[0])
-	@post = Post.find_by_sql("SELECT * FROM posts WHERE posts.id = " + params[:id])
-        @no_comment = true
+      @post = Post.find_by_sql("SELECT posts.*, comments.* FROM posts, comments WHERE comments.post_id = posts.id AND posts.id = " + params[:id]) #We get the post and the comment of it.
+      if (nil == @post[0]) #But if there is no result...
+	@post = Post.find_by_sql("SELECT * FROM posts WHERE posts.id = " + params[:id]) #...then there is no comment for the post.
+        @no_comment = true #We need to tell it to the erb template also, because rendering is different.
       end
-      @comment = Comment.new
-      #@edit_comment = Comment.find(params[:id])
+      @comment = Comment.new #We need to prepare here the new comment because the comments are on the show page of the post.
       @title = @title + " | " + @post[0].title
       erb "post_views/show_post".to_sym
     end
@@ -35,9 +34,9 @@
       @comment = Comment.new(params[:comment])
 	if @comment.save
           @post = Post.find_by_sql("SELECT comments.* FROM comments WHERE comments.post_id = " + params[:comment][:post_id])
-	  erb "post_views/comments".to_sym, :layout => false
+	  erb "post_views/comments".to_sym, :layout => false #We need to disable layouts because this will be updated with an AJAX call and this is only a small part of the page.
 	else
-	  "There is problem with the save of the comment!"
+	  "<p>There is problem with the save of the comment!</p>"
 	end
     end
 
@@ -47,7 +46,7 @@
           @post = Post.find_by_sql("SELECT comments.* FROM comments WHERE comments.post_id = " + params[:comment][:post_id])
 	  erb "post_views/comments".to_sym, :layout => false
 	else
-	  "There is problem with the save of the comment!"
+	  "<p>There is problem with the save of the comment!</p>"
 	end
     end
 
@@ -60,8 +59,7 @@
       @comment = Comment.find_by_sql("SELECT * FROM comments WHERE comments.id = " + params[:id])
       if (nil == @comment[0]) #If its there is is probably an error, but if not...
         #We need to get all of the posts with the post_id got from the deleted comment.
-	@post_id = @post_id[0].post_id
-	@post_id = @post_id.to_s
+	@post_id = @post_id[0].post_id.to_s
 	@post = Post.find_by_sql("SELECT comments.* FROM comments WHERE comments.post_id = " + @post_id)
 	#If the query would still not wield results, then we probably deleted all of the comments.
 	if (nil == @post)
@@ -70,7 +68,7 @@
 	end
 	erb "post_views/comments".to_sym, :layout => false
       else
-        "There is problem with the deletion of the comment!"
+        "<p>There is problem with the deletion of the comment!</p>"
       end
     end
     
