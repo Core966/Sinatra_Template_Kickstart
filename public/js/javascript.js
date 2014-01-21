@@ -16,8 +16,8 @@ $(document).ready(function() {
             }
         });
     });
-
-    $("a.comment-button").click(function() {
+    
+    $(document).on("click", 'a.comment-button', function(event) {
       var classes = $(this).attr("class").split(" ");
       var comment_class_id = classes[classes.length-1];
       var comment_id = $("div." + comment_class_id).attr("id").split("-");
@@ -27,8 +27,8 @@ $(document).ready(function() {
       $("div#comment-button-id-" + comment_db_id).html('<input type="submit" class="pure-button" value="Submit Edited Comment" />');
     });
 
-    $("#edit_comment").submit(function(ev){
-	ev.preventDefault();
+    $(document).on("submit", '#edit_comment', function(event) {
+	event.preventDefault();
         var classes = $(this).attr("class").split(" ");
         var comment_class_id = classes[classes.length-1];
         var comment_id = comment_class_id.split("-");
@@ -43,8 +43,8 @@ $(document).ready(function() {
         });
     });
 
-    $("#delete_comment").submit(function(ev){
-	ev.preventDefault();
+    $(document).on("submit", '#delete_comment', function(event) {
+	event.preventDefault();
         var classes = $(this).attr("class").split(" ");
         var comment_class_id = classes[classes.length-1];
         var comment_id = comment_class_id.split("-");
