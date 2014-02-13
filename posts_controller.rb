@@ -55,22 +55,23 @@
       @post_id = Comment.find_by_sql("SELECT post_id FROM comments WHERE comments.id = " + params[:id])
       #2.) Destroy the comment to be deleted.
       @comment = Comment.find(params[:id]).destroy
-      #3.) Check if the comment is still there.
-      @comment = Comment.find_by_sql("SELECT * FROM comments WHERE comments.id = " + params[:id])
-      if (nil == @comment[0]) #If its there is is probably an error, but if not...
-        #We need to get all of the posts with the post_id got from the deleted comment.
-	@post_id = @post_id[0].post_id.to_s
+      #3.) Check if the comment deletion was successful.
+      if @comment.destroy 
+        #4.)We need to get the post_id from the already deleted comment.
+        @post_id = @post_id[0].post_id.to_s
+	#If there would be no more comments with the given post_id, then we have deleted all of the comments for the given post.
 	@post = Post.find_by_sql("SELECT comments.* FROM comments WHERE comments.post_id = " + @post_id)
-	#If the query would still not wield results, then we probably deleted all of the comments.
+
 	if (nil == @post)
 	@no_comment = true #And we need to tell that to the check in the erb template
 	@post = Post.find_by_sql("SELECT * FROM posts WHERE posts.id = " + @post_id)
 	end
 	erb "post_views/comments".to_sym, :layout => false
       else
-        "<p>There is problem with the deletion of the comment!</p>"
+        "<p>There is problem with the deletion of the comment!</p>" 
       end
-    end
+
+   end
     
     get '/posts/:id/edit' do
       @post = Post.find(params[:id])

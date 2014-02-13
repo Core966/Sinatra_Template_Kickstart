@@ -3,8 +3,6 @@ $(document).ready(function() {
         cache: false
     });
 
-    var ajax_load = "<img src='/images/Loading-special.gif' alt='loading...' />";
-
     $("#load_comment").submit(function(ev){ // This is the new comment button of the post.
 	ev.preventDefault();
 	$.ajax({
