@@ -30,7 +30,7 @@
 	end
     end
 
-    get '/comments' do
+    post '/comments' do
       @comment = Comment.new(params[:comment])
 	if @comment.save
           @post = Post.find_by_sql("SELECT comments.* FROM comments WHERE comments.post_id = " + params[:comment][:post_id])
@@ -40,7 +40,7 @@
 	end
     end
 
-    get '/comments/:id' do
+    put '/comments/:id' do
       comment = Comment.find(params[:id])
 	if comment.update_attributes(params[:comment])
           @post = Post.find_by_sql("SELECT comments.* FROM comments WHERE comments.post_id = " + params[:comment][:post_id])
@@ -50,13 +50,13 @@
 	end
     end
 
-    get '/comments/:id/delete' do
+    delete '/comments/:id/delete' do
       #1.) We need to check for the given post_id of the given comment.
       @post_id = Comment.find_by_sql("SELECT post_id FROM comments WHERE comments.id = " + params[:id])
       #2.) Destroy the comment to be deleted.
       @comment = Comment.find(params[:id]).destroy
       #3.) Check if the comment deletion was successful.
-      if @comment.destroy 
+      if @comment 
         #4.)We need to get the post_id from the already deleted comment.
         @post_id = @post_id[0].post_id.to_s
 	#If there would be no more comments with the given post_id, then we have deleted all of the comments for the given post.

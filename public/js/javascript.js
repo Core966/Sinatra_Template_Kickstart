@@ -6,6 +6,7 @@ $(document).ready(function() {
     $("#load_comment").submit(function(ev){ // This is the new comment button of the post.
 	ev.preventDefault();
 	$.ajax({
+	    type: "POST",
             url: "/comments",
             data: $(this).serialize(),
             dataType: "html",
@@ -32,6 +33,7 @@ $(document).ready(function() {
         var comment_id = comment_class_id.split("-"); // Then we get the comment ID.
         var comment_db_id = comment_id[comment_id.length-1]; // Of course we only need the number at the end.
 	$.ajax({
+	    type: "POST",
             url: "/comments/" + comment_db_id, // Here we need the comment ID.
             data: $(this).serialize(),
             dataType: "html",
@@ -48,6 +50,7 @@ $(document).ready(function() {
         var comment_id = comment_class_id.split("-");
         var comment_db_id = comment_id[comment_id.length-1];
 	$.ajax({
+	    type: "POST",
             url: "/comments/" + comment_db_id + "/delete",
             data: $(this).serialize(),
             dataType: "html",

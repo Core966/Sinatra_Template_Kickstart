@@ -31,9 +31,11 @@ password: APP_CONFIG['db_password'])
 
 	configure do
 	  set :views, "#{File.dirname(__FILE__)}/views"
+	  enable :sessions
 	end
 
 	before do
+	  session['cooldown'] ||= 0
 	  @title = "Web application title"
 	  @author = "Web application author"
 	end
