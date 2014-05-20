@@ -26,6 +26,8 @@ container {
   border-top: 3px solid #000;
 }
 
+.flash { color:red; #FEFEFE}
+
 .pure-menu-selected { background: none repeat scroll 0% 0% rgb(238, 238, 238); }
 
 .pure-button { margin-top:1em; margin-bottom:1em; }

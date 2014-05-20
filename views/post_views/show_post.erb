@@ -1,44 +1,39 @@
 <h1><%= @post[0].title %></h1>
 <p><%= @post[0].body %></p>
-<% unless @no_comment %>
-<div id="comments">
-<h4>Comments:</h4>
-<% @post.each do |comments| %>
-<form id="edit_comment" class="pure-form pure-form-stacked edit-<%= "#{comments.id}" %>" method="post">
-<label for="comment">Comment nr. <%= comments.id %>:</label><br />
-<div id="comment-id-<%= "#{comments.id}" %>" class="edit-<%= "#{comments.id}" %>"><%= comments.comment %></div>
-<input type="hidden" name="comment[post_id]" value="<%= "#{params[:id]}" %>" />
-<input type="hidden" name="_method" value="put" />
-<br />
-<div id="comment-button-id-<%= "#{comments.id}" %>"><a class="pure-button comment-button edit-<%= "#{comments.id}" %>">Start editing comment</a></div>
-</form>
-<form id="delete_comment" class="edit-<%= "#{comments.id}" %>" method="post">
-  <input type="hidden" name="_method" value="delete" />
-  <input type="submit" class="pure-button" value="Delete Comment" />
-</form>
-<% end %>
-</div>
-<% else %>
-<div id="comments">
-<p>No comment is submitted yet.</p>
-</div>
-<% end %>
+	
+		<% unless @no_comment %>
+		<div id="comments">
+		<h4>Comments:</h4>
+			<% @post.each do |comments| %>
+					<label for="comment">Comment nr. <%= comments.id %>:</label><br />
+					<div id=" <%= "#{comments.id}" %> "><%= comments.comment %></div>
+				<form id="delete_comment" action="/comments/<%= "#{comments.id}" %>/delete" method="post">
+					<input type="hidden" name="_method" value="delete" />
+					<input type="submit" class="pure-button" value="Delete Comment" />
+				</form>
+			<% end %>
+		</div>
+	<% else %>
+		<div id="comments">
+		<p>No comment is submitted yet.</p>
+		</div>
+	<% end %>
 
-
-<h4>Add new comment</h4>
-<form id="load_comment" class="pure-form pure-form-stacked" method="post">
-  <label for="comment">Comment:</label><br />
-  <textarea id="comment" name="comment[comment]" rows="3"></textarea>
-  <input type="hidden" name="comment[post_id]" value="<%= "#{params[:id]}" %>" />
-  <br />
-  <input type="submit" class="pure-button" value="Create Comment" />
-</form>
+	<h4>Add new comment</h4>
+	<form id="load_comment" class="pure-form pure-form-stacked" action="/comments" method="post">
+		<label for="comment">Comment:</label><br />
+		<textarea id="comment" name="comment[comment]" rows="3"></textarea>
+		<input type="hidden" name="comment[post_id]" value="<%= "#{params[:id]}" %>" />
+		<br />
+		<input type="submit" class="pure-button" value="Create Comment" />
+	</form>
 
 <form action="/posts/<%= "#{params[:id]}" %>" method="post">
-  <input type="hidden" name="_method" value="delete" />
-  <input type="submit" class="pure-button" value="Delete Post" />
+	<input type="hidden" name="_method" value="delete" />
+	<input type="submit" class="pure-button" value="Delete Post" />
 </form>
 
 <a class="pure-button" href="/posts/<%= "#{params[:id]}" %>/edit">Edit post</a>
 
 <a class="pure-button" href="/posts">Back</a>
+

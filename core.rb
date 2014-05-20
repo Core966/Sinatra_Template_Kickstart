@@ -31,7 +31,6 @@ password: APP_CONFIG['db_password'])
 
 	configure do
 	  set :views, "#{File.dirname(__FILE__)}/views"
-	  enable :sessions
 	end
 
 	before do

@@ -30,48 +30,7 @@
 	end
     end
 
-    post '/comments' do
-      @comment = Comment.new(params[:comment])
-	if @comment.save
-          @post = Post.find_by_sql("SELECT comments.* FROM comments WHERE comments.post_id = " + params[:comment][:post_id])
-	  erb "post_views/comments".to_sym, :layout => false #We need to disable layouts because this will be updated with an AJAX call and this is only a small part of the page.
-	else
-	  "<p>There is problem with the save of the comment!</p>"
-	end
-    end
 
-    put '/comments/:id' do
-      comment = Comment.find(params[:id])
-	if comment.update_attributes(params[:comment])
-          @post = Post.find_by_sql("SELECT comments.* FROM comments WHERE comments.post_id = " + params[:comment][:post_id])
-	  erb "post_views/comments".to_sym, :layout => false
-	else
-	  "<p>There is problem with the save of the comment!</p>"
-	end
-    end
-
-    delete '/comments/:id/delete' do
-      #1.) We need to check for the given post_id of the given comment.
-      @post_id = Comment.find_by_sql("SELECT post_id FROM comments WHERE comments.id = " + params[:id])
-      #2.) Destroy the comment to be deleted.
-      @comment = Comment.find(params[:id]).destroy
-      #3.) Check if the comment deletion was successful.
-      if @comment 
-        #4.)We need to get the post_id from the already deleted comment.
-        @post_id = @post_id[0].post_id.to_s
-	#If there would be no more comments with the given post_id, then we have deleted all of the comments for the given post.
-	@post = Post.find_by_sql("SELECT comments.* FROM comments WHERE comments.post_id = " + @post_id)
-
-	if (nil == @post)
-	@no_comment = true #And we need to tell that to the check in the erb template
-	@post = Post.find_by_sql("SELECT * FROM posts WHERE posts.id = " + @post_id)
-	end
-	erb "post_views/comments".to_sym, :layout => false
-      else
-        "<p>There is problem with the deletion of the comment!</p>" 
-      end
-
-   end
     
     get '/posts/:id/edit' do
       @post = Post.find(params[:id])
@@ -92,3 +51,43 @@
       @post = Post.find(params[:id]).destroy
       redirect to('/')
     end
+    
+    #Comment controllers start from here:
+
+    post '/comments' do
+      @comment = Comment.new(params[:comment])
+	if @comment.save
+	  redirect "/posts/#{@comment.post_id}"
+	else
+	  @flash = "<div class=\"flash\">There is problem with the save of the comment!</div>"
+	end
+    end
+
+    put '/comments/:id/edit' do #Don't forget that this method will only append content, and only once at most!
+
+      comment = Comment.find(params[:id])
+	if comment.update_attributes(params[:comment])
+          @post = Post.find_by_sql("SELECT comments.* FROM comments WHERE comments.post_id = " + params[:comment][:post_id])
+	  erb "post_views/comments".to_sym, :layout => false
+	else
+	  @flash = "<div class=\"flash\">There is problem with the save of the comment!</div>"
+	end
+ 
+    end
+
+    delete '/comments/:id/delete' do #Don't forget that this will be a put method!
+
+      #1.) We need to check for the given post_id of the given comment.
+      @post_id = Comment.find_by_sql("SELECT post_id FROM comments WHERE comments.id = " + params[:id])
+      #2.) Destroy the comment to be deleted.
+      @comment = Comment.find(params[:id]).destroy
+      #3.) Check if the comment deletion was successful.
+      if @comment 
+        #4.)We need to get the post_id from the already deleted comment.
+        @post_id = @post_id[0].post_id.to_s
+	redirect "/posts/#{@post_id}"
+      else
+        @flash = "<div class=\"flash\">There is problem with the deletion of the comment!</div>" 
+      end
+
+   end
