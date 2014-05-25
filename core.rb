@@ -34,7 +34,6 @@ password: APP_CONFIG['db_password'])
 	end
 
 	before do
-	  session['cooldown'] ||= 0
 	  @title = "Web application title"
 	  @author = "Web application author"
 	end
@@ -45,7 +44,7 @@ password: APP_CONFIG['db_password'])
 
 	# root page
 	get '/' do
-	  @posts = Post.find_by_sql("SELECT id, title, CONCAT(SUBSTRING(body,1, 50), '...') AS partial_body FROM posts") #We are only displaying the first 50 characters of a given post.
+	  @posts = Post.find_by_sql("SELECT id, title, CONCAT(SUBSTRING(body,1, 50), '...') AS partial_body FROM posts WHERE is_deleted = 0") #We are only displaying the first 50 characters of a given post.
 	  erb :home
 	end
 

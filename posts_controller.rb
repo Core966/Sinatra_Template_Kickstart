@@ -1,6 +1,6 @@
     
     get '/posts/?' do
-      @posts = Post.find_by_sql("SELECT * FROM posts")
+      @posts = Post.find_by_sql("SELECT * FROM posts WHERE is_deleted = 0")
       erb "post_views/posts".to_sym
     end
     
@@ -30,18 +30,10 @@
 	end
     end
 
-
-    
-    get '/posts/:id/edit' do
-      @post = Post.find(params[:id])
-      @title = @title + " | Edit Form"
-      erb "post_views/edit_post".to_sym
-    end
-    
     put '/posts/:id' do
       post = Post.find(params[:id])
 	if post.update_attributes(params[:post])
-	  redirect "/posts/#{post.id}"
+	  redirect "/posts"
 	else
 	  redirect to("/posts/#{params[:id]}")
 	end

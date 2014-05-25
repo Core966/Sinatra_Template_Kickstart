@@ -29,11 +29,10 @@
 	</form>
 
 <form action="/posts/<%= "#{params[:id]}" %>" method="post">
-	<input type="hidden" name="_method" value="delete" />
+	<input type="hidden" name="_method" value="put" />
+	<input type="hidden" name="post[is_deleted]" value="<%= true %>" />
 	<input type="submit" class="pure-button" value="Delete Post" />
 </form>
-
-<a class="pure-button" href="/posts/<%= "#{params[:id]}" %>/edit">Edit post</a>
 
 <a class="pure-button" href="/posts">Back</a>
 
