@@ -11,10 +11,20 @@
     end
     
     get '/posts/:id' do
-      @post = Post.find_by_sql("SELECT posts.*, comments.* FROM posts, comments WHERE comments.post_id = posts.id AND posts.id = " + params[:id]) #We get the post and the comment of it.
+      @post = Post.find_by_sql("SELECT posts.* FROM posts WHERE posts.id = " + params[:id])
+    
+      if @post[0].is_deleted == true
+        redirect "/posts"
+      end
+
+      @post = Post.find_by_sql("SELECT posts.*, comments.* FROM posts, comments WHERE comments.post_id = posts.id AND posts.id = " + params[:id] + " AND comments.is_deleted = 0") #We get the post and the comment of it.
+      @comment = Comment.find_by_sql("SELECT posts.*, comments.* FROM posts, comments WHERE comments.post_id = posts.id AND posts.id = " + params[:id] + " AND comments.was_expanded = 1 AND comments.is_deleted = 0") #We get the post and the comment of it.
       if (nil == @post[0]) #But if there is no result...
 	@post = Post.find_by_sql("SELECT * FROM posts WHERE posts.id = " + params[:id]) #...then there is no comment for the post.
         @no_comment = true #We need to tell it to the erb template also, because rendering is different.
+      end
+      if (nil == @comment[0])
+        @not_expanded = true
       end
       @comment = Comment.new #We need to prepare here the new comment because the comments are on the show page of the post.
       @title = @title + " | " + @post[0].title
@@ -39,11 +49,6 @@
 	end
     end
     
-    delete '/posts/:id' do
-      @post = Post.find(params[:id]).destroy
-      redirect to('/')
-    end
-    
     #Comment controllers start from here:
 
     post '/comments' do
@@ -58,28 +63,28 @@
     put '/comments/:id/edit' do #Don't forget that this method will only append content, and only once at most!
 
       comment = Comment.find(params[:id])
-	if comment.update_attributes(params[:comment])
-          @post = Post.find_by_sql("SELECT comments.* FROM comments WHERE comments.post_id = " + params[:comment][:post_id])
-	  erb "post_views/comments".to_sym, :layout => false
+      
+      expanded_comment = params[:comment][:comment] + "\n\n" + "Edit:" + "\n\n" + params[:comment][:expansion]
+      
+	if comment.update_attributes(comment: expanded_comment, was_expanded: true)
+	  redirect to("/posts/#{params[:comment][:post_id]}")
 	else
-	  @flash = "<div class=\"flash\">There is problem with the save of the comment!</div>"
+	  redirect to("/posts/#{params[:id]}")
 	end
  
     end
 
-    delete '/comments/:id/delete' do #Don't forget that this will be a put method!
+    put '/comments/:id/delete' do
 
-      #1.) We need to check for the given post_id of the given comment.
+      comment = Comment.find(params[:id])
+      
       @post_id = Comment.find_by_sql("SELECT post_id FROM comments WHERE comments.id = " + params[:id])
-      #2.) Destroy the comment to be deleted.
-      @comment = Comment.find(params[:id]).destroy
-      #3.) Check if the comment deletion was successful.
-      if @comment 
-        #4.)We need to get the post_id from the already deleted comment.
-        @post_id = @post_id[0].post_id.to_s
-	redirect "/posts/#{@post_id}"
-      else
-        @flash = "<div class=\"flash\">There is problem with the deletion of the comment!</div>" 
-      end
 
+      @post_id = @post_id[0].post_id.to_s
+      
+	if comment.update_attributes(params[:comment])
+	  redirect to("/posts/#{@post_id}")
+	else
+	  redirect to("/posts/#{params[:id]}")
+	end
    end
