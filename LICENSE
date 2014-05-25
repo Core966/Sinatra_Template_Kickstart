@@ -2,6 +2,11 @@ The MIT License (MIT)
 
 Copyright (c) 2013 Tibor Szalay
 
+This application uses part of the code of the "sinatra-activerecord" gem made by Blake Mizerany in 2009! (aka creator of Sinatra)
+The given repository from where the code was used was owned by Janko Marohnić under MIT license also.
+
+NOTE: I had to do it this way as there were compatiblity issues with MySQL. The plugin was not detected by including the gem.
+
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
 the Software without restriction, including without limitation the rights to
