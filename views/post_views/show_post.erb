@@ -7,7 +7,7 @@
 		<% unless @not_expanded %>
 			<% @post.each do |comments| %>
 					<label for="comment">Comment nr. <%= comments.id %>:</label><br />
-					<div id=" <%= "#{comments.id}" %> "><%= comments.comment %></div>
+					<div id="comment-nr-<%= "#{comments.id}" %> "><%= comments.comment %></div>
 				<form id="delete_comment" action="/comments/<%= "#{comments.id}" %>/delete" method="post">
 					<input type="hidden" name="_method" value="put" />
 					<input type="hidden" name="comment[is_deleted]" value="<%= true %>" />
@@ -17,7 +17,7 @@
 		<% else %>
 			<% @post.each do |comments| %>
 					<label for="comment">Comment nr. <%= comments.id %>:</label><br />
-					<div id=" <%= "#{comments.id}" %> "><%= comments.comment %></div>
+					<div id="comment-nr-<%= "#{comments.id}" %> "><%= comments.comment %></div>
 				<form id="edit_comment" action="/comments/<%= "#{comments.id}" %>/edit" method="post">
 					<input type="hidden" name="_method" value="put" />
 					<label for="comment_edit">Comment_edit:</label><br />
