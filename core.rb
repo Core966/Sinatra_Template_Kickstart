@@ -2,6 +2,9 @@ require 'bundler/setup'
 require 'sinatra'
 require 'active_record'
 require 'yaml'
+require 'warden'
+require 'sinatra/flash'
+require 'bcrypt'
 
 #Load all models in the model directory:
 
@@ -28,6 +31,7 @@ password: APP_CONFIG['db_password'])
 
 ####################################################
 
+	require File.join(File.dirname(__FILE__), './warden_auth.rb')
 
 	configure do
 	  set :views, "#{File.dirname(__FILE__)}/views"
@@ -51,8 +55,37 @@ password: APP_CONFIG['db_password'])
 	get '/about/?' do
 	  erb :about
 	end
+	
+	get '/login/?' do
+	  erb :login
+	end
+	
+	post '/login' do
+	  env['warden'].authenticate!
+
+    	  if session[:return_to].nil?
+	    redirect '/'
+	  else
+	    redirect session[:return_to]
+	  end
+	end
+	
+	get '/restricted' do
+	  if env['warden'].authenticate
+	    "You have entered a restricted area! Congratulations"
+	  else
+	    redirect '/login'
+          end
+	end
+	
+	get '/logout' do
+	  env['warden'].raw_session.inspect
+          env['warden'].logout
+          redirect '/'
+	end
 
 #Enable the below in order to activate the CRUD operations of posts and their comments:
 require File.join(File.dirname(__FILE__), './posts_controller.rb')
 #Or you may delete the post_views folder and all its files within. You must also edit the menu.erb partial.
 
+require File.join(File.dirname(__FILE__), './users_controller.rb')
