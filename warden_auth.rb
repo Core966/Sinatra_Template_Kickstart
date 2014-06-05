@@ -1,7 +1,3 @@
-  enable :sessions
-  register Sinatra::Flash
-  use Rack::Session::Cookie, secret: "nothingissecretontheinternet"
-  use Rack::MethodOverride
 
   use Warden::Manager do |config|
     # Tell Warden how to save our User info into a session.

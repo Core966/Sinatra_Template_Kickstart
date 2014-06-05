@@ -46,3 +46,22 @@ border: 2px #D6D6D6 solid;
 padding-left: 40px;
  }
 
+.flash-error {
+  width: 600px;
+  padding: 5px;
+  font-weight: bold;
+  margin: 20px;
+  background: #EAADB3;
+  color: #903;
+  border: 1px solid #903;
+}
+
+.flash-success {
+  width: 600px;
+  padding: 5px;
+  font-weight: bold;
+  margin: 20px;
+  background: #9EF9B0;
+  color: #369C4B;
+  border: 1px solid #369C4B;
+}

@@ -19,6 +19,18 @@
 	<div class="pure-g">
 	<div class="pure-u-1">
 	<%= erb :menu %>
+	
+	<% if flash[:success] %>
+	  <div class="flash-success">
+		<%= flash[:success] %>
+	  </div>
+	<% end %>
+
+	<% if flash[:error] %>
+	  <div class="flash-error">
+		<%= flash[:error] %>
+	  </div>
+	<% end %>
         <%= yield %>
         </div>
         </div>

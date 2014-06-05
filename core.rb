@@ -31,11 +31,14 @@ password: APP_CONFIG['db_password'])
 
 ####################################################
 
-	require File.join(File.dirname(__FILE__), './warden_auth.rb')
-
 	configure do
 	  set :views, "#{File.dirname(__FILE__)}/views"
+	  enable :sessions
+	  use Rack::Session::Cookie, secret: "nothingissecretontheinternet"
+	  use Rack::MethodOverride
 	end
+	
+	require File.join(File.dirname(__FILE__), './warden_auth.rb')
 
 	before do
 	  @title = "Web application title"
@@ -61,12 +64,12 @@ password: APP_CONFIG['db_password'])
 	end
 	
 	post '/login' do
-	  env['warden'].authenticate!
-
-    	  if session[:return_to].nil?
+    	  if env['warden'].authenticate
+	    flash[:success] = "You have successfuly logged in!"
 	    redirect '/'
 	  else
-	    redirect session[:return_to]
+	    flash[:error] = "Password or username is incorrect!"
+	    redirect '/'
 	  end
 	end
 	
@@ -74,13 +77,14 @@ password: APP_CONFIG['db_password'])
 	  if env['warden'].authenticate
 	    "You have entered a restricted area! Congratulations"
 	  else
+	    flash[:error] = "You must login before entering a restricted area!"
 	    redirect '/login'
           end
 	end
 	
 	get '/logout' do
-	  env['warden'].raw_session.inspect
           env['warden'].logout
+	  flash[:success] = "You have successfuly logged out!"
           redirect '/'
 	end
 
