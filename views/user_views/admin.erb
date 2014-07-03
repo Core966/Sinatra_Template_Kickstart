@@ -1,0 +1,35 @@
+<h2>Active users:</h2>
+<table class="pure-table pure-table-bordered">
+<thead>
+  <tr>
+	    <th>Username</th>
+	    <th>Email(hidden)</th>
+	    <th>Change password</th>
+	    <th>Delete user</th>
+  </tr>
+</thead>
+<tbody>
+	<% @users.each do |user| %>
+	<tr>
+	    <td><%= user.username %></td>
+	    <td><%= user.partial_email %></td>
+	    <td>
+	    <form id="new_password" action="/users/<%= "#{user.id}" %>" method="post">
+		<input type="hidden" name="_method" value="put" />
+		<input id="password" type="password" name="user[password]" />
+		<input type="submit" class="pure-button" value="Change Password" />
+	    </form>
+	    </td>
+	    <td>
+	    <form id="delete_user" action="/users/<%= "#{user.id}" %>" method="post">
+		<input type="hidden" name="_method" value="put" />
+		<input type="hidden" name="user[is_deleted]" value="<%= true %>" />
+		<input type="submit" class="pure-button" value="Delete User" />
+	    </form>
+	    </td>
+	</tr>  
+	<% end %>
+</tbody>
+</table>
+<a class="pure-button" href="users/new">Create new user</a>
+<a class="pure-button" href="/">Back</a>

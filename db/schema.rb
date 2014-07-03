@@ -34,6 +34,7 @@ ActiveRecord::Schema.define(version: 20140529170211) do
     t.string   "email"
     t.string   "password_hash"
     t.string   "password_salt"
+    t.boolean  "is_deleted"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

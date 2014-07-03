@@ -84,6 +84,7 @@ password: APP_CONFIG['db_password'])
 	
 	get '/logout' do
           env['warden'].logout
+	  session.clear
 	  flash[:success] = "You have successfuly logged out!"
           redirect '/'
 	end

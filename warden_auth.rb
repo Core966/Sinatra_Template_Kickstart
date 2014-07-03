@@ -6,7 +6,7 @@
     config.serialize_into_session{|user| user.id }
     # Now tell Warden how to take what we've stored in the session
     # and get a User from that information.
-    config.serialize_from_session{|id| User.find_by(id) }
+    config.serialize_from_session{|id| User.find_by_id(id) }
 
     config.scope_defaults :default,
       # "strategies" is an array of named methods with which to
@@ -28,10 +28,10 @@
 
     def authenticate!
       user = User.find_by(email: params['user']['email'])
-
+      
       if user.nil?
         fail!("The username you entered does not exist.")
-      elsif user.authenticate(params['user']['email'], params['user']['password'])
+      elsif user.authenticate(params['user']['email'], params['user']['password']) && user.is_deleted == false
         success!(user)
       else
         fail!("Could not log in")

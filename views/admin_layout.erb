@@ -2,7 +2,7 @@
   <head>
     <title><%= @title %></title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.3.0/pure-nr-min.css">
-    <link href="/main.css" rel="stylesheet" type="text/css" />
+    <link href="/admin.css" rel="stylesheet" type="text/css" />
     <script src="/js/jquery-1.10.2.min.js"></script>
     <script src="/js/javascript.js"></script>
   </head>
@@ -18,15 +18,6 @@
 	</div>
 	<div class="pure-g">
 	<div class="pure-u-1">
-	<% if env['warden'].authenticated? %>
-	  <b>Logged in as <%= env['warden'].user.username %></b>
-          <a href="/logout" class="pure-button" title="Logout">Logout</a>
-	  <br />
-	  <br />
-	  <br />
-	<% end %>
-	
-	<%= erb :menu %>
 	
 	<% if flash[:success] %>
 	  <div class="flash-success">

@@ -26,23 +26,7 @@ container {
   border-top: 3px solid #000;
 }
 
-.pure-menu-selected { background: none repeat scroll 0% 0% rgb(238, 238, 238); }
-
 .pure-button { margin-top:1em; margin-bottom:1em; }
-
-.comment { border: 1px solid rgb(229, 229, 229);
-display: block;
-padding: 0.3em 0px;
-margin-bottom: 10px;
-}
-
-#comments div { white-space: pre;
--webkit-border-radius: 90px;
--moz-border-radius: 90px;
-border-radius: 90px;
-border: 2px #D6D6D6 solid;
-padding-left: 40px;
- }
 
 .flash-error {
   width: 600px;
@@ -63,3 +47,5 @@ padding-left: 40px;
   color: #369C4B;
   border: 1px solid #369C4B;
 }
+
+th, td { padding:10px; }
