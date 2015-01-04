@@ -23,7 +23,7 @@
 	  redirect "/login"
 	else
 	  flash[:error] = "Save of new user into the database has failed."
-	  erb "user_views/new_user".to_sym #...the application redirects to the same page.
+	  redirect "/users/new" #...the application redirects to the same page.
 	end
     end
     

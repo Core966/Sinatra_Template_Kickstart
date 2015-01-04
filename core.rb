@@ -5,6 +5,9 @@ require 'yaml'
 require 'warden'
 require 'sinatra/flash'
 require 'bcrypt'
+require 'rack/csrf'
+require 'bb-ruby'
+
 
 #Load all models in the model directory:
 
@@ -12,9 +15,9 @@ $LOAD_PATH.unshift("#{File.dirname(__FILE__)}/models")
 Dir.glob("#{File.dirname(__FILE__)}/models/*.rb") { |model| require File.basename(model, '.*') }
 
 # The database configuration data ready from the below yaml file.
-
 # Necessary format:
-
+# db_encoding: <db encoding here>
+# db_adapter: <db adapter here>
 # db_name: <db name here>
 # db_host: <hostname here>
 # db_username: <db username here>
@@ -23,19 +26,22 @@ Dir.glob("#{File.dirname(__FILE__)}/models/*.rb") { |model| require File.basenam
 APP_CONFIG = YAML.load_file('./config/database.yml')
 
 ActiveRecord::Base.establish_connection(
-adapter: "mysql2",
+encoding: APP_CONFIG['db_encoding'],
+adapter: APP_CONFIG['db_adapter'],
 host: APP_CONFIG['db_host'],
 database: APP_CONFIG['db_name'],
 username: APP_CONFIG['db_username'],
-password: APP_CONFIG['db_password'])
+password: APP_CONFIG['db_password']
+)
 
 ####################################################
 
 	configure do
-	  set :views, "#{File.dirname(__FILE__)}/views"
-	  enable :sessions
-	  use Rack::Session::Cookie, secret: "nothingissecretontheinternet"
-	  use Rack::MethodOverride
+		set :views, "#{File.dirname(__FILE__)}/views"
+		enable :sessions
+		use Rack::Session::Cookie, :expire_after => 60*60*3, secret: "nothingissecretontheinternet"
+		use Rack::Csrf
+		use Rack::MethodOverride
 	end
 	
 	require File.join(File.dirname(__FILE__), './warden_auth.rb')
@@ -49,9 +55,16 @@ password: APP_CONFIG['db_password'])
 	  (request.path==path || request.path==path+'/') ? "pure-menu-selected" : nil
 	end
 
+	def stripBB(bbstring)
+		bbstring.gsub!(/\[(.*?)\]/) do|tag|
+		tag.gsub(/.*/, ' ')
+		end
+	return bbstring
+	end
+
 	# root page
 	get '/' do
-	  @posts = Post.find_by_sql("SELECT id, title, CONCAT(SUBSTRING(body,1, 50), '...') AS partial_body FROM posts WHERE is_deleted = 0") #We are only displaying the first 50 characters of a given post.
+	  @posts = Post.find_by_sql("SELECT id, title, CONCAT(SUBSTRING(body,1, 250), '...') AS partial_body FROM posts WHERE is_deleted = 0 ORDER BY id DESC LIMIT 0, 5") #We are only displaying the first 250 characters of a given post.
 	  erb :home
 	end
 

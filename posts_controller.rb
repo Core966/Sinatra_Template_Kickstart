@@ -13,18 +13,18 @@
     get '/posts/:id' do
       @post = Post.find_by_sql("SELECT posts.* FROM posts WHERE posts.id = " + params[:id])
     
-      if @post[0].is_deleted == true
+      if @post[0].is_deleted == true #We check if the post is already flagged as deleted.
         redirect "/posts"
       end
 
       @post = Post.find_by_sql("SELECT posts.*, comments.* FROM posts, comments WHERE comments.post_id = posts.id AND posts.id = " + params[:id] + " AND comments.is_deleted = 0") #We get the post and the comment of it.
-      @comment = Comment.find_by_sql("SELECT posts.*, comments.* FROM posts, comments WHERE comments.post_id = posts.id AND posts.id = " + params[:id] + " AND comments.was_expanded = 1 AND comments.is_deleted = 0") #We get the post and the comment of it.
+      @comment = Comment.find_by_sql("SELECT posts.*, comments.* FROM posts, comments WHERE comments.post_id = posts.id AND posts.id = " + params[:id] + " AND comments.was_expanded = 1 AND comments.is_deleted = 0") #We check if the comment is already expanded.
       if (nil == @post[0]) #But if there is no result...
 	@post = Post.find_by_sql("SELECT * FROM posts WHERE posts.id = " + params[:id]) #...then there is no comment for the post.
         @no_comment = true #We need to tell it to the erb template also, because rendering is different.
       end
       if (nil == @comment[0])
-        @not_expanded = true
+        @not_expanded = true #We will manipulate the view if the comment is already expanded (it will be no longer editable).
       end
       @comment = Comment.new #We need to prepare here the new comment because the comments are on the show page of the post.
       @title = @title + " | " + @post[0].title
@@ -36,7 +36,7 @@
 	if @post.save #In case of failure to save into the database...
 	  redirect "/posts/#{@post.id}"
 	else
-	  erb "post_views/new_post".to_sym #...the application redirects to the same page.
+	  redirect "/posts/new" #...the application redirects to the same page.
 	end
     end
 
@@ -45,7 +45,7 @@
 	if post.update_attributes(params[:post])
 	  redirect "/posts"
 	else
-	  redirect to("/posts/#{params[:id]}")
+	  redirect "/posts/#{params[:id]}"
 	end
     end
     
@@ -56,7 +56,8 @@
 	if @comment.save
 	  redirect "/posts/#{@comment.post_id}"
 	else
-	  @flash = "<div class=\"flash\">There is problem with the save of the comment!</div>"
+	  flash[:error] = "There is problem with the save of the comment!"
+	  redirect "/posts/"
 	end
     end
 
@@ -67,9 +68,9 @@
       expanded_comment = params[:comment][:comment] + "\n\n" + "Edit:" + "\n\n" + params[:comment][:expansion]
       
 	if comment.update_attributes(comment: expanded_comment, was_expanded: true)
-	  redirect to("/posts/#{params[:comment][:post_id]}")
+	  redirect "/posts/#{params[:comment][:post_id]}"
 	else
-	  redirect to("/posts/#{params[:id]}")
+	  redirect "/posts/#{params[:id]}"
 	end
  
     end
@@ -83,8 +84,8 @@
       @post_id = @post_id[0].post_id.to_s
       
 	if comment.update_attributes(params[:comment])
-	  redirect to("/posts/#{@post_id}")
+	  redirect "/posts/#{@post_id}"
 	else
-	  redirect to("/posts/#{params[:id]}")
+	  redirect "/posts/#{params[:id]}"
 	end
    end

@@ -1,10 +1,11 @@
-<% @posts.each do |post| %>
-  <li>
-    <h3><a href="/posts/<%= post.id %>"><%= post.title %></a></h3>
-    <p><%= post.body %></p>
-  </li>
+<% unless @posts[0] == nil %>
+	<% @posts.each do |post| %>
+	  <li>
+	    <h3><a href="/posts/<%= post.id %>"><%= post.title %></a></h3>
+	    <p><%= post.body.bbcode_to_html({}, false) %></p>
+	  </li>
+	<% end %>
 <% end %>
-
 <a class="pure-button" href="/posts/new">New post</a>
 
 <a class="pure-button" href="/">Back</a>

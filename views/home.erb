@@ -5,7 +5,7 @@
 <% @posts.each do |post| %>
   <li>
     <h3><a href="/posts/<%= post.id %>"><%= post.title %></a></h3>
-    <p><%= post.partial_body %></p>
+    <p><%= stripBB(post.partial_body) %></p>
   </li>
 <% end %>
 </ul> 
