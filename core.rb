@@ -23,20 +23,30 @@ Dir.glob("#{File.dirname(__FILE__)}/models/*.rb") { |model| require File.basenam
 # db_username: <db username here>
 # db_password: <db user password here>
 
-APP_CONFIG = YAML.load_file('./config/database.yml')
+#APP_CONFIG = YAML.load_file('./config/database.yml')
+
+#ActiveRecord::Base.establish_connection(
+#encoding: APP_CONFIG['db_encoding'],
+#adapter: APP_CONFIG['db_adapter'],
+#host: APP_CONFIG['db_host'],
+#database: APP_CONFIG['db_name'],
+#username: APP_CONFIG['db_username'],
+#password: APP_CONFIG['db_password']
+#)
 
 ActiveRecord::Base.establish_connection(
-encoding: APP_CONFIG['db_encoding'],
-adapter: APP_CONFIG['db_adapter'],
-host: APP_CONFIG['db_host'],
-database: APP_CONFIG['db_name'],
-username: APP_CONFIG['db_username'],
-password: APP_CONFIG['db_password']
+encoding: 'utf8',
+adapter: 'mysql2',
+host: ENV['IP'],
+database: 'c9',
+username: ENV['C9_USER']
 )
 
 ####################################################
 
 	configure do
+		#set :port, ENV['PORT']
+		#set :host, ENV['IP']
 		set :views, "#{File.dirname(__FILE__)}/views"
 		enable :sessions
 		use Rack::Session::Cookie, :expire_after => 60*60*3, secret: "nothingissecretontheinternet"

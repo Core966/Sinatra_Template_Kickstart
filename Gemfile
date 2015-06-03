@@ -8,4 +8,4 @@ gem 'bcrypt'
 gem 'sinatra-flash'
 gem 'rack_csrf'
 gem 'bb-ruby'
-
+gem 'thin'
