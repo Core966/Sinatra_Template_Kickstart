@@ -7,7 +7,7 @@ require 'sinatra/flash'
 require 'bcrypt'
 require 'rack/csrf'
 require 'bb-ruby'
-
+require 'encrypted_cookie'
 
 #Load all models in the model directory:
 
@@ -48,8 +48,7 @@ username: ENV['C9_USER']
 		#set :port, ENV['PORT']
 		#set :host, ENV['IP']
 		set :views, "#{File.dirname(__FILE__)}/views"
-		enable :sessions
-		use Rack::Session::Cookie, :expire_after => 60*60*3, secret: "nothingissecretontheinternet"
+		use Rack::Session::EncryptedCookie, :http_only => true, :expire_after => 60*60*3, :secret => "nothingissecretontheinternet"
 		use Rack::Csrf
 		use Rack::MethodOverride
 	end
