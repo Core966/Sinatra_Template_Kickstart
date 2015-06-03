@@ -1,0 +1,81 @@
+<h1><%= @post[0].title %></h1>
+<p><%= @post[0].body.bbcode_to_html({}, false) %></p>
+	
+	<% unless @no_comment %>
+		<div id="comments">
+		<h4>Comments:</h4>
+		<% if @expanded == true %>
+			<% @post.each do |comments| %>
+					<label for="comment">Comment:</label><br />
+					<div class="comment"><%= comments.comment.bbcode_to_html({}, false) %></div>
+				<form id="delete_comment" action="/comments/<%= "#{comments.id}" %>/delete" method="post">
+					<%= Rack::Csrf.csrf_tag(env) %>
+					<input type="hidden" name="_method" value="put" />
+					<input type="hidden" name="comment[is_deleted]" value="<%= true %>" />
+					<input type="submit" class="pure-button" value="Delete Comment" />
+				</form>
+			<% end %>
+		<% else %>
+			<% @post.each do |comments| %>
+					<label for="comment">Comment:</label><br />
+					<div class="comment"><%= comments.comment.bbcode_to_html({}, false) %></div>
+				<form id="edit_comment" action="/comments/<%= "#{comments.id}" %>/edit" method="post">
+					<%= Rack::Csrf.csrf_tag(env) %>
+					<input type="hidden" name="_method" value="put" />
+					<label for="comment_edit">Comment edit (only allowed once):</label><br />
+					<textarea id="comment_addon" name="comment[expansion]" rows="5"></textarea>
+					<br />
+					<input type="hidden" name="comment[comment]" value="<%= comments.comment %>" />
+					<input type="hidden" name="comment[was_expanded]" value="<%= true %>" />
+					<input type="hidden" name="comment[post_id]" value="<%= "#{params[:id]}" %>" />
+					<input type="submit" class="pure-button" value="Edit Comment" />
+					  <script>
+						CKEDITOR.replace( 'comment_addon',
+						{
+						language: 'hu'
+						});
+					  </script>
+				</form>
+				<form id="delete_comment" action="/comments/<%= "#{comments.id}" %>/delete" method="post">
+					<%= Rack::Csrf.csrf_tag(env) %>
+					<input type="hidden" name="_method" value="put" />
+					<input type="hidden" name="comment[is_deleted]" value="<%= true %>" />
+					<input type="submit" class="pure-button" value="Delete Comment" />
+				</form>
+			<% end %>
+		<% end %>
+		</div>
+	<% else %>
+		<div id="comments">
+		<p>No comment is submitted yet.</p>
+		</div>
+	<% end %>
+
+<% if @no_comment %>
+	<h4>Add new comment</h4>
+	<form id="load_comment" class="pure-form pure-form-stacked" action="/comments" method="post">
+		<%= Rack::Csrf.csrf_tag(env) %>
+		<label for="comment">Comment:</label><br />
+		<textarea id="comment" name="comment[comment]" rows="3"></textarea>
+		<input type="hidden" name="comment[was_expanded]" value="<%= false %>" />
+		<input type="hidden" name="comment[is_deleted]" value="<%= false %>" />
+		<input type="hidden" name="comment[post_id]" value="<%= "#{params[:id]}" %>" />
+		<br />
+		<input type="submit" class="pure-button" value="Create Comment" />
+	  <script>
+		CKEDITOR.replace( 'comment',
+		{
+		language: 'hu'
+		});
+	  </script>
+	</form>
+<% end %>
+<form action="/posts/<%= "#{params[:id]}" %>" method="post">
+	<%= Rack::Csrf.csrf_tag(env) %>
+	<input type="hidden" name="_method" value="put" />
+	<input type="hidden" name="post[is_deleted]" value="<%= true %>" />
+	<input type="submit" class="pure-button" value="Delete Post" />
+</form>
+
+<a class="pure-button" href="/posts">Back</a>
+

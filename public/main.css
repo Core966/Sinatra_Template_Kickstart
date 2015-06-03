@@ -30,19 +30,22 @@ container {
 
 .pure-button { margin-top:1em; margin-bottom:1em; }
 
-.comment { border: 1px solid rgb(229, 229, 229);
+.comment { border: 2px solid #818168;
 display: block;
 padding: 0.3em 0px;
 margin-bottom: 10px;
 }
 
-#comments div { white-space: pre;
--webkit-border-radius: 90px;
--moz-border-radius: 90px;
-border-radius: 90px;
-border: 2px #D6D6D6 solid;
-padding-left: 40px;
+#comments { 
+padding: 10px 40px 10px 40px;
+background-color: #B8B894;
+-webkit-border-radius: 30px;
+-moz-border-radius: 30px;
+border-radius: 30px;
+opacity:0.8;
  }
+ 
+#comment {}
 
 .flash-error {
   width: 600px;
