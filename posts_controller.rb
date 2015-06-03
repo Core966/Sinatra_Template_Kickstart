@@ -24,11 +24,7 @@
         @no_comment = true #We need to tell it to the erb template also, because rendering is different.
       end
       if (@comment[0].nil? == false)
-        if (@comment[0].was_expanded == true)
-          @expanded = true #We will manipulate the view if the comment is already expanded (it will be no longer editable).
-        else
-          @expanded = false #We will manipulate the view if the comment is already expanded (it will be no longer editable).
-        end
+        @comment[0].was_expanded ? @expanded = true : @expanded = false #We will manipulate the view if the comment is already expanded (it will be no longer editable).
       end
       @comment = Comment.new #We need to prepare here the new comment because the comments are on the show page of the post.
       @title = @title + " | " + @post[0].title
