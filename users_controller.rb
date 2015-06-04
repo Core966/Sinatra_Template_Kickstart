@@ -5,8 +5,8 @@
         @users = User.find_by_sql("SELECT id, username, CONCAT('...', SUBSTRING(email,7, 4), '...') AS partial_email FROM users WHERE is_deleted = 0")
         erb "user_views/admin".to_sym, :layout => :admin_layout
       else
-	flash[:error] = "You must login before entering a restricted area!"
-	redirect '/login'
+				flash[:error] = "You must login before entering a restricted area!"
+				redirect '/login'
       end
     end
 
@@ -18,13 +18,13 @@
     
     post '/users/?' do
       @user = User.new(params[:user])
-	if @user.save #In case of failure to save into the database...
-	  flash[:success] = "You have successfuly created a new user!"
-	  redirect "/login"
-	else
-	  flash[:error] = "Save of new user into the database has failed."
-	  redirect "/users/new" #...the application redirects to the same page.
-	end
+				if @user.save #In case of failure to save into the database...
+				  flash[:success] = "You have successfuly created a new user! Your randomly generated username is: " + @user.username
+				  redirect "/login"
+				else
+				  flash[:error] = "Save of new user into the database has failed."
+				  redirect "/users/new" #...the application redirects to the same page.
+				end
     end
     
     put '/users/:id' do

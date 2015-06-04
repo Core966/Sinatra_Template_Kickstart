@@ -5,6 +5,58 @@
 		<div id="comments">
 		<h4>Comments:</h4>
 		<% if @expanded == true %>
+		
+		  <% if env['warden'].authenticated? %>
+		
+			<% if @post[0].user_id == env['warden'].user.id %>
+				
+				<% @post.each do |comments| %>
+						<label for="comment">Comment:</label><br />
+						<div class="comment"><%= comments.comment.bbcode_to_html({}, false) %></div>
+					<form id="delete_comment" action="/comments/<%= "#{comments.id}" %>/delete" method="post">
+						<%= Rack::Csrf.csrf_tag(env) %>
+						<input type="hidden" name="_method" value="put" />
+						<input type="hidden" name="comment[is_deleted]" value="<%= true %>" />
+						<input type="submit" class="pure-button" value="Delete Comment" />
+					</form>
+				<% end %>
+				
+			<% else %>
+			
+					<% @post.each do |comments| %>
+							<label for="comment">Comment:</label><br />
+							<div class="comment"><%= comments.comment.bbcode_to_html({}, false) %></div>
+						<form id="delete_comment" action="/comments/<%= "#{comments.id}" %>/delete" method="post">
+							<%= Rack::Csrf.csrf_tag(env) %>
+							<input type="hidden" name="_method" value="put" />
+							<input type="hidden" name="comment[is_deleted]" value="<%= true %>" />
+							<input type="submit" class="pure-button" value="Delete Comment" />
+						</form>
+					<% end %>
+					
+					<h4>Add new comment</h4>
+					<form id="load_comment" class="pure-form pure-form-stacked" action="/comments" method="post">
+						<%= Rack::Csrf.csrf_tag(env) %>
+						<label for="comment">Comment:</label><br />
+						<textarea id="comment" name="comment[comment]" rows="3"></textarea>
+						<input type="hidden" name="comment[was_expanded]" value="<%= false %>" />
+						<input type="hidden" name="comment[is_deleted]" value="<%= false %>" />
+						<input type="hidden" name="comment[post_id]" value="<%= "#{params[:id]}" %>" />
+						<input type="hidden" name="comment[user_id]" value="<%= env['warden'].authenticated? ? env['warden'].user.id : nil %>" />
+						<br />
+						<input type="submit" class="pure-button" value="Create Comment" />
+					  <script>
+						CKEDITOR.replace( 'comment',
+						{
+						language: 'hu'
+						});
+					  </script>
+					</form>
+					
+			<% end %>
+			
+		  <% else %>
+		  
 			<% @post.each do |comments| %>
 					<label for="comment">Comment:</label><br />
 					<div class="comment"><%= comments.comment.bbcode_to_html({}, false) %></div>
@@ -15,6 +67,8 @@
 					<input type="submit" class="pure-button" value="Delete Comment" />
 				</form>
 			<% end %>
+		  
+		  <% end %>
 		<% else %>
 			<% @post.each do |comments| %>
 					<label for="comment">Comment:</label><br />
@@ -28,6 +82,7 @@
 					<input type="hidden" name="comment[comment]" value="<%= comments.comment %>" />
 					<input type="hidden" name="comment[was_expanded]" value="<%= true %>" />
 					<input type="hidden" name="comment[post_id]" value="<%= "#{params[:id]}" %>" />
+					<input type="hidden" name="comment[user_id]" value="<%= env['warden'].authenticated? ? env['warden'].user.id : nil %>" />
 					<input type="submit" class="pure-button" value="Edit Comment" />
 					  <script>
 						CKEDITOR.replace( 'comment_addon',
@@ -60,6 +115,7 @@
 		<input type="hidden" name="comment[was_expanded]" value="<%= false %>" />
 		<input type="hidden" name="comment[is_deleted]" value="<%= false %>" />
 		<input type="hidden" name="comment[post_id]" value="<%= "#{params[:id]}" %>" />
+		<input type="hidden" name="comment[user_id]" value="<%= env['warden'].authenticated? ? env['warden'].user.id : nil %>" />
 		<br />
 		<input type="submit" class="pure-button" value="Create Comment" />
 	  <script>

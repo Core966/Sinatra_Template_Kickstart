@@ -1,5 +1,7 @@
 class User < ActiveRecord::Base
   
+  has_many :comments
+  
   attr_accessor :password
   before_save :encrypt_password
   before_save :create_uniq_username
@@ -18,7 +20,7 @@ class User < ActiveRecord::Base
   
   def create_uniq_username
     if name.present?
-	self.username = name.gsub(/\s+/, "").downcase + Time.now.strftime("%L").to_s
+	    self.username = name.gsub(/\s+/, "").downcase + Time.now.strftime("%L").to_s
     end
   end
 

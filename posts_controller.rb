@@ -32,61 +32,85 @@
     end
     
     post '/posts/?' do
+      if env['warden'].authenticate
       @post = Post.new(params[:post])
-	if @post.save #In case of failure to save into the database...
-	  redirect "/posts/#{@post.id}"
-	else
-	  redirect "/posts/new" #...the application redirects to the same page.
-	end
+      	if @post.save #In case of failure to save into the database...
+      	  redirect "/posts/#{@post.id}"
+      	else
+      	  redirect "/posts/new" #...the application redirects to the same page.
+      	end
+      else
+        flash[:error] = "You must login before entering a restricted area!"
+	      redirect '/login'
+      end
     end
 
     put '/posts/:id' do
+      if env['warden'].authenticate
       post = Post.find(params[:id])
-	if post.update_attributes(params[:post])
-	  redirect "/posts"
-	else
-	  redirect "/posts/#{params[:id]}"
-	end
+      	if post.update_attributes(params[:post])
+      	  redirect "/posts"
+      	else
+      	  redirect "/posts/#{params[:id]}"
+      	end
+      else
+        flash[:error] = "You must login before entering a restricted area!"
+	      redirect '/login'
+      end
     end
     
     #Comment controllers start from here:
 
     post '/comments' do
-      @comment = Comment.new(params[:comment])
-    	if @comment.save
-    	  redirect "/posts/#{@comment.post_id}"
-    	else
-    	  flash[:error] = "There is problem with the save of the comment!"
-    	  redirect "/posts/"
-    	end
+      if env['warden'].authenticate
+        @comment = Comment.new(params[:comment])
+      	if @comment.save
+      	  redirect "/posts/#{@comment.post_id}"
+      	else
+      	  flash[:error] = "There is problem with the save of the comment!"
+      	  redirect "/posts/"
+      	end
+      else
+        flash[:error] = "You must login before entering a restricted area!"
+	      redirect '/login'
+      end
     end
 
     put '/comments/:id/edit' do #Don't forget that this method will only append content, and only once at most!
-
-      comment = Comment.find(params[:id])
-      
-      expanded_comment = params[:comment][:comment] + "\n\n" + "Edit:" + "\n\n" + params[:comment][:expansion]
-      
-    	if comment.update_attributes(comment: expanded_comment, was_expanded: true)
-    	  redirect "/posts/#{params[:comment][:post_id]}"
-    	else
-    	  redirect "/posts/#{params[:id]}"
-    	end
- 
+      if env['warden'].authenticate
+        comment = Comment.find(params[:id])
+        
+        expanded_comment = params[:comment][:comment] + "\n\n" + "Edit:" + "\n\n" + params[:comment][:expansion]
+        
+      	if comment.update_attributes(comment: expanded_comment, was_expanded: true)
+      	  redirect "/posts/#{params[:comment][:post_id]}"
+      	else
+      	  redirect "/posts/#{params[:id]}"
+      	end
+      else
+        flash[:error] = "You must login before entering a restricted area!"
+	      redirect '/login'
+      end
     end
 
     put '/comments/:id/delete' do
 
-      comment = Comment.find(params[:id])
-      
-      @post_id = Comment.find_by_sql("SELECT post_id FROM comments WHERE comments.id = " + params[:id])
+      if env['warden'].authenticate
 
-      @post_id = @post_id[0].post_id.to_s
-      
-    	if comment.update_attributes(params[:comment])
-    	  redirect "/posts/#{@post_id}"
-    	else
-    	  redirect "/posts/#{params[:id]}"
-    	end
-    	
+        comment = Comment.find(params[:id])
+        
+        @post_id = Comment.find_by_sql("SELECT post_id FROM comments WHERE comments.id = " + params[:id])
+  
+        @post_id = @post_id[0].post_id.to_s
+        
+      	if comment.update_attributes(params[:comment])
+      	  redirect "/posts/#{@post_id}"
+      	else
+      	  redirect "/posts/#{params[:id]}"
+      	end
+      	
+      else
+        flash[:error] = "You must login before entering a restricted area!"
+	      redirect '/login'
+      end
     end
