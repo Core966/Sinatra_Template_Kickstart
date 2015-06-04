@@ -3,6 +3,7 @@
     <title><%= @title %></title>
     <link rel="stylesheet" href="/pure.css" type="text/css" />
     <link href="/main.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="/flash_messages/styles.css" type="text/css" charset="utf-8" />
     <script src="/js/jquery-1.10.2.min.js"></script>
     <script src="/ckeditor/ckeditor.js"></script>
     <script src="/js/javascript.js"></script>
@@ -30,16 +31,32 @@
 	<%= erb :menu %>
 	
 	<% if flash[:success] %>
-	  <div class="flash-success">
-		<%= flash[:success] %>
-	  </div>
+	  <br />
+	  <div class="ml-alert-1-success">
+		<div class="style-1-icon success"></div>
+		  <%= flash[:success] %>
+	  <div class="style-1-close success" onclick="this.parentNode.parentNode.removeChild(this.parentNode);"></div>
+	</div>
 	<% end %>
 
 	<% if flash[:error] %>
-	  <div class="flash-error">
-		<%= flash[:error] %>
-	  </div>
+	  <br />
+	  <div class="ml-alert-1-error">
+		<div class="style-1-icon error"></div>
+		  <%= flash[:error] %>
+	  <div class="style-1-close error" onclick="this.parentNode.parentNode.removeChild(this.parentNode);"></div>
+	</div>
 	<% end %>
+	
+	<% if flash[:info] %>
+	  <br />
+	  <div class="ml-alert-1-info">
+		<div class="style-1-icon info"></div>
+		  <%= flash[:info] %>
+	  <div class="style-1-close info" onclick="this.parentNode.parentNode.removeChild(this.parentNode);"></div>
+	</div>
+	<% end %>
+	
         <%= yield %>
         </div>
         </div>

@@ -1,7 +1,7 @@
 <form action="/users" class="pure-form pure-form-stacked" method="post">
   <%= Rack::Csrf.csrf_tag(env) %>
-  <label for="username"> Username:
-  <input id="username" type="text" name="user[username]" />
+  <label for="name"> Name:
+  <input id="name" type="text" name="user[name]" />
   </label>
   <label for="email"> Email:
   <input id="email" type="text" name="user[email]" />

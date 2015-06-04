@@ -59,6 +59,18 @@ username: ENV['C9_USER']
 	  @title = "Web application title"
 	  @author = "Web application author"
 	end
+	
+	after do
+		if session[:status] == "counting"
+
+			if session[:failed] == true
+				session[:counter] = session[:counter] + 1
+			end
+
+		  session[:failed] = false
+
+		end
+	end
 
 	def current?(path='/') #This will return the path of the page that’s currently being visited, relative to the root URL
 	  (request.path==path || request.path==path+'/') ? "pure-menu-selected" : nil
@@ -82,16 +94,47 @@ username: ENV['C9_USER']
 	end
 	
 	get '/login/?' do
+	
+	    if session[:status] == "counting"
+		flash[:info] = "You have failed to login, number of retries left: " + (5 - session[:counter]).to_s
+	    end
+
+	    if session[:status] == "locked"
+		flash[:error] = "You have failed to login too many times and you have been locked out!"
+		flash[:info] = "You can try again after three hours."
+		redirect '/'
+	    end
+	  
 	  erb :login
+	  
 	end
 	
 	post '/login' do
-    	  if env['warden'].authenticate
+      if env['warden'].authenticate
+	    session[:status] = ""
 	    flash[:success] = "You have successfuly logged in!"
 	    redirect '/'
 	  else
 	    flash[:error] = "Password or username is incorrect!"
-	    redirect '/'
+
+		session[:status].nil? ? session[:counter] = 0 : nil
+
+		if session[:status] == "counting"
+			if session[:counter] >= 5
+				session[:status] = "locked"
+				flash[:error] = "You have failed to login too many times and you have been locked out!"
+				flash[:info] = "You can try again after three hours."
+				redirect '/'
+			end
+		end
+
+		session[:status] = "counting"
+
+		session[:failed] = true
+
+		flash[:info] = "You have failed to login, number of retries left: " + (4 - session[:counter]).to_s
+
+	    redirect '/login'
 	  end
 	end
 	
@@ -105,10 +148,18 @@ username: ENV['C9_USER']
 	end
 	
 	get '/logout' do
-          env['warden'].logout
-	  session.clear
-	  flash[:success] = "You have successfuly logged out!"
-          redirect '/'
+
+		if session[:status] == "locked"
+		  flash[:error] = "You have failed to login too many times and you have been locked out!"
+		  flash[:info] = "You can try again after three hours."
+		  redirect '/'
+		end
+
+			 env['warden'].logout
+			 session.clear
+			 flash[:success] = "You have successfuly logged out!"
+			 redirect '/'
+
 	end
 
 #Enable the below in order to activate the CRUD operations of posts and their comments:
