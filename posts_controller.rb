@@ -28,7 +28,7 @@
       end
       @comment = Comment.new #We need to prepare here the new comment because the comments are on the show page of the post.
       @title = @title + " | " + @post[0].title
-      erb "post_views/show_post_v2".to_sym
+      erb "post_views/show_post_v3".to_sym
     end
     
     post '/posts/?' do

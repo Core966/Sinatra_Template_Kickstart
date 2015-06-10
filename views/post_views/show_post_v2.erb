@@ -70,6 +70,7 @@
 		  
 		  <% end %>
 		<% else %>
+		  <% if env['warden'].authenticated? %>
 			<% @post.each do |comments| %>
 					<label for="comment">Comment:</label><br />
 					<div class="comment"><%= comments.comment.bbcode_to_html({}, false) %></div>
@@ -98,6 +99,20 @@
 					<input type="submit" class="pure-button" value="Delete Comment" />
 				</form>
 			<% end %>
+		  <% else %>
+		  
+			<% @post.each do |comments| %>
+					<label for="comment">Comment:</label><br />
+					<div class="comment"><%= comments.comment.bbcode_to_html({}, false) %></div>
+				<form id="delete_comment" action="/comments/<%= "#{comments.id}" %>/delete" method="post">
+					<%= Rack::Csrf.csrf_tag(env) %>
+					<input type="hidden" name="_method" value="put" />
+					<input type="hidden" name="comment[is_deleted]" value="<%= true %>" />
+					<input type="submit" class="pure-button" value="Delete Comment" />
+				</form>
+			<% end %>
+			
+		  <% end %>
 		<% end %>
 		</div>
 	<% else %>

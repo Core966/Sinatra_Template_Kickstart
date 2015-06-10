@@ -9,7 +9,6 @@ class CreateUsers < ActiveRecord::Migration
       t.boolean :is_deleted
       t.timestamps
     end
-    User.create(name: "example", username: "example967", email:"example@example.com", password_hash: '$2a$10$UBuLrWmZtzw5HBT.n24nKuqoPTdGbT2VzQLaHQMxfRKbI/lvx7tdC', password_salt: '$2a$10$UBuLrWmZtzw5HBT.n24nKu',  is_deleted: false) #Test123
   end
   def down
     drop_table :users
